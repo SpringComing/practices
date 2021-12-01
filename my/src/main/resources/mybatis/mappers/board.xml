@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="board">
+
+	<insert id="insert" parameterType="boardvo">
+		<![CDATA[
+		insert
+		into board
+		values (null, #{title }, #{contents }, 0, now(), #{groupNo }, #{orderNo }, #{depth }, #{userNo }) 
+		]]>
+	</insert>
+
+	<select id="countVo" parameterType="string" resultType="long">
+		<choose>
+			<when test="_parameter == null or _parameter == ''">
+				<![CDATA[
+				select count(*) from board
+				]]>				
+			</when>
+			<otherwise>
+				<![CDATA[
+				select count(*) 
+				from board
+				where title like '%${_parameter }%' 
+				]]>				
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findLimit" parameterType="map" resultType="boardvo">
+		<![CDATA[
+		select a.no, a.title, a.contents, a.hit, date_format(a.reg_date, '%Y-%m-%d %H:%i:%s') as regDate, 
+		a.group_no as groupNo, a.order_no as orderNo, a.depth, b.no as userNo, b.name as userName
+		from board a, user b
+		where a.user_no = b.no
+		order by a.group_no desc, a.order_no asc, a.depth asc
+		limit #{startIndex }, #{lines }
+		]]>
+	</select>
+	
+	<select id="findNo" parameterType="long" resultType="boardvo">
+		<![CDATA[
+		select no, title, contents, hit, date_format(reg_date, '%Y-%m-%d %H:%i:%s') as regDate, 
+		group_no as groupNo, order_no as orderNo, depth, user_no as userNo
+		from board
+		where no = #{no }
+		]]>
+	</select>
+	
+	<select id="findMaxGroupNo" resultType="long">
+		<![CDATA[
+		select max(group_no) from board
+		]]>
+	</select>
+	
+	<select id="findTitle" parameterType="map" resultType="boardvo">
+		<![CDATA[
+		select a.no, a.title, a.contents, a.hit, date_format(a.reg_date, '%Y-%m-%d %H:%i:%s') as regDate, a.group_no as groupNO, a.order_no as orderNo, a.depth, b.no as userNo, b.name as userName
+		from board a, user b
+		where a.user_no = b.no
+		and a.title like #{kwd }
+		order by a.group_no desc, a.order_no asc, a.depth asc
+		limit #{startIndex }, #{lines }
+		]]>
+	</select>
+	
+	<update id="deleteUpdate" parameterType="boardvo">
+		<![CDATA[
+		update board
+		set title = '[삭제된 메세지 입니다.]', contents = '[삭제]'
+		where no = #{no }
+		and group_no = #{groupNo }
+		and order_no = #{orderNo }
+		and depth = #{depth }
+		]]>
+	</update>
+	
+	<update id="update" parameterType="boardvo">
+		<![CDATA[
+		update board
+		set title = #{title }, contents = #{contents }, reg_date = now()
+		where no = #{no }
+		]]>
+	</update>
+	
+	<update id="updateOrderNo" parameterType="boardvo">
+		<![CDATA[
+		update board
+		set order_no = order_no + 1
+		where group_no = #{groupNo }
+		and order_no >= #{orderNo }
+		]]>
+	</update>
+	
+	<update id="updateHit" parameterType="long">
+		<![CDATA[
+		update board
+		set hit = hit + 1
+		where no = #{no } 
+		]]>
+	</update>
+	
+</mapper>
