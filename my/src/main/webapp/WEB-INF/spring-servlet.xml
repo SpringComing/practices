@@ -46,7 +46,7 @@
 	
 	<!-- mvc url-resource mapping -->
 	<mvc:resources mapping="/gallery/images/**" location="file:/upload-mysite/" />
-	
+	<mvc:resources mapping="/logoSpring/**" location="file:/logoSpring/" />
 	<!-- Interceptors -->
 	<mvc:interceptors>
 		<mvc:interceptor>
@@ -94,7 +94,7 @@
 				<value>messages/messages_ko</value>
 			</list>
 		</property>
-	</bean>		
+	</bean>
 
 	<context:annotation-config />
 	<context:component-scan base-package="com.douzone.mysite.controller, com.douzone.mysite.exception" />

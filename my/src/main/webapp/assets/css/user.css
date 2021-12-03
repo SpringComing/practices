@@ -28,3 +28,18 @@ input[type="submit"]	{ display:block; width:80px; margin:20px auto }
 #user p		{ text-align:center; padding:10px}
 
 #user p.jr-success	{ height:200px }
+
+#mail_check_input_box_false{
+    background-color:#ebebe4;
+}
+ 
+#mail_check_input_box_true{
+    background-color:white;
+}
+
+.correct{
+    color : green;
+}
+.incorrect{
+    color : red;
+}

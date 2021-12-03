@@ -6,9 +6,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.douzone.mysite.security.Auth;
 import com.douzone.mysite.security.AuthUser;
@@ -20,66 +22,65 @@ import com.douzone.mysite.vo.UserVo;
 public class UserController {
 	@Autowired
 	private UserService userService;
-	
-	@RequestMapping(value="/join", method=RequestMethod.GET)
+
+	@RequestMapping(value = "/join", method = RequestMethod.GET)
 	public String join(@ModelAttribute UserVo vo) {
 		return "user/join";
 	}
-	
-	@RequestMapping(value="/join", method=RequestMethod.POST)
+
+	@RequestMapping(value = "/join", method = RequestMethod.POST)
 	public String join(@ModelAttribute @Valid UserVo vo, BindingResult result, Model model) {
-		if(result.hasErrors()) {
+		if (result.hasErrors()) {
 //			List<ObjectError> list = result.getAllErrors();
 //			for(ObjectError error : list) {
 //				System.out.println(error);
 //			}
-			
+
 			model.addAllAttributes(result.getModel());
 			// model.addAttribute("userVo", vo);
 			return "user/join";
 		}
-		
-		
+
 		userService.join(vo);
 		return "redirect:/user/joinsuccess";
 	}
-	
+
 	@RequestMapping("/joinsuccess")
 	public String joinsuccess() {
 		return "user/joinsuccess";
 	}
-	
-	@RequestMapping(value="/login", method=RequestMethod.GET)
+
+	@RequestMapping(value = "/login", method = RequestMethod.GET)
 	public String login() {
 		return "user/login";
 	}
-	
+
 	@Auth
-	@RequestMapping(value="/update", method=RequestMethod.GET)
+	@RequestMapping(value = "/update", method = RequestMethod.GET)
 	public String update(@AuthUser UserVo authUser, Model model) {
 		UserVo userVo = userService.getUser(authUser.getNo());
 		model.addAttribute("userVo", userVo);
-		
+
 		return "user/update";
-	}	
+	}
 
 	@Auth
-	@RequestMapping(value="/update", method=RequestMethod.POST)
+	@RequestMapping(value = "/update", method = RequestMethod.POST)
 	public String update(@AuthUser UserVo authUser, UserVo userVo) {
 		userVo.setNo(authUser.getNo());
 
 		userService.updateUser(userVo);
 		authUser.setName(userVo.getName());
-		
+
 		return "redirect:/user/update";
 	}
-	
-	@RequestMapping(value="/javaxMail", method=RequestMethod.GET)
-	public String javaxMail(Model model) {
-		userService.javaxMail();
-		String state = "이메일을 보냈습니다.";
-		model.addAttribute("state", state);
-		return "user/joinsuccess";
+
+	@GetMapping("/javaxMail")
+	public String checkemail(@RequestParam(value="email", required=true, defaultValue="") String email) throws Exception{
+		System.out.println("email:"+email);
+		return userService.javaxMail(email);
 	}
+
 	
+
 }
