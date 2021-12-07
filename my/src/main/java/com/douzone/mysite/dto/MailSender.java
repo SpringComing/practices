@@ -40,7 +40,7 @@ public class MailSender {
 
 		String html = "<table style='width:700px; margin-left:20px;'>"
 				+ "<tr>"
-				+ "<tr><img src='/logoSpring/logoSpring.png' style='width:700px; height:300px;'</tr>"
+				+ "<tr><img src='https://i.esdrop.com/d/52eukywkmujt/wWhKCdp2zE.png' style='width:700px; height:300px;'</tr>"
 				+ "</tr><tr><td><span>안녕하세요. <strong>SpringCome</strong> 입니다.<br>저희 사이트를 방문해 주셔서 감사드립니다.<br><br><strong>"
 				+ "</strong> SpringCome에서 보낸 인증번호는 다음과 같습니다.</span></td>" + "</tr>"
 				+ "<tr><td><table style='margin-top:20px;'><col width='100px'><col width='200px'><tr style='border:1px solid gray; '>"
